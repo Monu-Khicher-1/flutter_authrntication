@@ -22,6 +22,7 @@ class MockAuthService{
   Future<bool> signUp(User user) async{
     // TODO: implement signUp
     // throw UnimplementedError();
+    print("Recieved: { name: ${user.name}, phoneNumber: ${user.phoneNumber}");
     var delayedVal = await Future.delayed(
       const Duration(seconds: 2),
           () => true,
@@ -30,9 +31,10 @@ class MockAuthService{
   }
 
   @override
-  Future<bool> verifyOtp() async {
+  Future<bool> verifyOtp(String otp) async {
     // TODO: implement verifyOtp
     // throw UnimplementedError();
+    print("Recieved: {OTP: $otp }");
     var delayedVal = await Future.delayed(
       const Duration(seconds: 2),
           () => true,

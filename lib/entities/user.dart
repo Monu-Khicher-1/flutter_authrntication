@@ -7,4 +7,6 @@ class User{
   User({required this.name ,required this.phoneNumber});
 
   static User empty = User(name: '', phoneNumber: '');
+
+
 }

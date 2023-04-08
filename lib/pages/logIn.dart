@@ -33,6 +33,7 @@ class _LogInPageState extends State<LogInPage> {
     bool isvalid =await authservice.logIn(newuser);
     if(isvalid){
       Utility.customSnackBar(context: context, message: "Successfully Logged In.");
+      Navigator.pushNamedAndRemoveUntil(context, '/home',(route) => false);
     }
     else{
       print("Could not Log in the user");
@@ -41,45 +42,49 @@ class _LogInPageState extends State<LogInPage> {
 
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 40,),
-            const Center(child: MainLogo(),),
-            const SizedBox(height: 30,),
-            Image.asset('assets/log_in_img.png'),
-            SizedBox(height: 20,),
-            Text1(text: "Welcome back Partner"),
-            SizedBox(height: 20,),
-            Text2(text: "LOG IN",),
-            FormUI(size),
-            SizedBox(height: 20,),
-            Container(color: AppColors.txt_grey, width: size.width*0.825, height: 1.2,),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text3(text: "Don't have account?"),
-                  TextButton(
-                    onPressed: (){},
-                    child: Text(
-                      "Create account",
-                      style: TextStyle(
-                        color: AppColors.but_orange,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14.8,
-                        letterSpacing: 0.46,
-                        fontStyle: FontStyle.normal,
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 40,),
+              const Center(child: MainLogo(),),
+              const SizedBox(height: 30,),
+              Image.asset('assets/log_in_img.png'),
+              SizedBox(height: 20,),
+              Text1(text: "Welcome back Partner"),
+              SizedBox(height: 20,),
+              Text2(text: "LOG IN",),
+              FormUI(size),
+              SizedBox(height: 20,),
+              Container(color: AppColors.txt_grey, width: size.width*0.825, height: 1.2,),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text3(text: "Don't have account?"),
+                    TextButton(
+                      onPressed: (){
+                        Navigator.pushNamedAndRemoveUntil(context, '/signup',(route) => false);
+                      },
+                      child: Text(
+                        "Create account",
+                        style: TextStyle(
+                          color: AppColors.but_orange,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14.8,
+                          letterSpacing: 0.46,
+                          fontStyle: FontStyle.normal,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
