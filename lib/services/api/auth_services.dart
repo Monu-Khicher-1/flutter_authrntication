@@ -4,7 +4,6 @@
 
 import 'package:study_partner_teach/entities/user.dart';
 
-
 class MockAuthService{
   @override
   Future<bool> logIn(User user) async{

@@ -26,9 +26,9 @@ class _AuthenticationState extends State<Authentication> {
               padding: const EdgeInsets.fromLTRB(35,0,35,16),
                 width: 300,
                 child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: ()async{
                       Navigator.pushNamedAndRemoveUntil(context, '/signup',(route) => false);
-                    },
+                    },  
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(10),
                       backgroundColor: AppColors.but_black,
