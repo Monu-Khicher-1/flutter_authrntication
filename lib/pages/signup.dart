@@ -19,9 +19,14 @@ class SignUpPage extends StatefulWidget {
 
 
 class _SignUpPageState extends State<SignUpPage> {
+  // Focus Nodes
+  // FocusNode node1 =FocusNode();
+  // FocusNode node2 = FocusNode();
+
   MockAuthService authservice =MockAuthService();
   final _formKey = GlobalKey<FormState>();
   final Validation validate =Validation();
+  bool _isButtonDisabled = false;
 
   String _username = "";
   String _phoneNumber = "";
@@ -30,11 +35,13 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
   void signup() async{
-    if(_formKey.currentState == null){
+    if(_formKey.currentState == null || ! _formKey.currentState!.validate()){
       _ValidationMode = AutovalidateMode.onUserInteraction;
       return;
     }
-    if (! _formKey.currentState!.validate())  return;
+    setState(() {
+      _isButtonDisabled = true;
+    });
     _formKey.currentState!.save();
     print("Name:$_username Phane No.: $_phoneNumber");
     User newUser =User(name: _username, phoneNumber: _phoneNumber);
@@ -59,6 +66,7 @@ class _SignUpPageState extends State<SignUpPage> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
@@ -115,11 +123,15 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: EdgeInsets.fromLTRB(35, 10, 35, 10),
               child: TextFormField(
                 initialValue: "",
-                 autovalidateMode: AutovalidateMode.onUserInteraction,
+                 // autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => validate.validateName(value),
+                // focusNode: node1,
                 onSaved: (val) {
                   _username = val ?? "";
                 },
+                // onFieldSubmitted: (value){
+                //   // Focus.of(context).requestFocus(node2);
+                // },
                 decoration: InputDecoration(
                   hintText: 'Full Name',
                   hintStyle: TextStyle(
@@ -137,8 +149,9 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: EdgeInsets.fromLTRB(35, 5, 35, 10),
               child: TextFormField(
                 initialValue: "",
-                keyboardType: TextInputType.phone,
-                autovalidateMode:AutovalidateMode.onUserInteraction,
+                // focusNode: node2,
+                // keyboardType: TextInputType.phone,
+                // autovalidateMode:AutovalidateMode.onUserInteraction,
                 validator: (value) => validate.validateMobile(value),
                 onSaved: (val) {
                   _phoneNumber= val ?? "";
@@ -160,7 +173,7 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: const EdgeInsets.fromLTRB(35,20,35,16),
               width: size.width,
               child: ElevatedButton(
-                  onPressed: signup,
+                  onPressed: _isButtonDisabled ? null : signup,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(10),
                     backgroundColor: AppColors.but_black,

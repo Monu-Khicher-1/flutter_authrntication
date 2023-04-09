@@ -20,14 +20,17 @@ class _LogInPageState extends State<LogInPage> {
   final _formKey = GlobalKey<FormState>();
   Validation validate= Validation();
   MockAuthService authservice = MockAuthService();
+  AutovalidateMode? _ValidationMode = AutovalidateMode.disabled;
   String _phoneNumber = "";
+  bool _isButtonDisabled = false;
   @override
 
   login() async{
-    if(_formKey.currentState == null){
+    if(_formKey.currentState == null || ! _formKey.currentState!.validate()){
+      _ValidationMode = AutovalidateMode.onUserInteraction;
       return;
     }
-    if (! _formKey.currentState!.validate())  return;
+    setState(() => _isButtonDisabled=true);
     _formKey.currentState!.save();
     print("Phane No.: $_phoneNumber");
     User newuser =User(name: "", phoneNumber: _phoneNumber);
@@ -96,7 +99,7 @@ class _LogInPageState extends State<LogInPage> {
   Widget FormUI(Size size){
     return Form(
         key: _formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: _ValidationMode,
         child: Column(
           children: [
             Padding(
@@ -104,7 +107,6 @@ class _LogInPageState extends State<LogInPage> {
               child: TextFormField(
                 keyboardType: TextInputType.number,
                 initialValue: "",
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => validate.validateMobile(value),
                 onSaved: (val) {
                   _phoneNumber= val ?? "";
@@ -126,7 +128,7 @@ class _LogInPageState extends State<LogInPage> {
               padding: const EdgeInsets.fromLTRB(35,20,35,16),
               width: size.width,
               child: ElevatedButton(
-                  onPressed: login,
+                  onPressed: _isButtonDisabled ? null :  login,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(10),
                     backgroundColor: AppColors.but_black,

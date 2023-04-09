@@ -5,6 +5,7 @@ import 'package:study_partner_teach/pages/home.dart';
 import 'package:study_partner_teach/services/api/auth_services.dart';
 import 'package:study_partner_teach/utils/Colors.dart';
 import 'package:study_partner_teach/utils/utils.dart';
+import 'package:study_partner_teach/widgets/dialogues.dart';
 import 'package:study_partner_teach/widgets/main_logo.dart';
 
 class OtpPage extends StatefulWidget {
@@ -18,12 +19,14 @@ class _OtpPageState extends State<OtpPage> {
   final _formKey = GlobalKey<FormState>();
   MockAuthService authservice = MockAuthService();
   List<String> pins = ['0','0','0','0'];
+  bool _isButtonDisabled = false;
 
   verify()  async{
     if(_formKey.currentState == null){
       return;
     }
     if (! _formKey.currentState!.validate())  return;
+    setState(() => _isButtonDisabled=true);
     _formKey.currentState!.save();
     String otp = pins[0]+pins[1]+pins[2]+pins[3];
     bool isvalid =await authservice.verifyOtp(otp);
@@ -38,63 +41,69 @@ class _OtpPageState extends State<OtpPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-          child:SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 40,),
-                MainLogo(),
-                SizedBox(height: 100,),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(60, 8, 60, 8),
-                  child: SizedBox(
-                    height: 80,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Enter the OTP that was sent to your mobile number",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Roboto',
-                          fontStyle: FontStyle.normal,
-                          color: AppColors.but_black,
-                          letterSpacing: 0.48,
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldPop = await MyDialogues.showMyDialog(context);
+        return shouldPop ?? false;
+      },
+      child: Scaffold(
+        body: SafeArea(
+            child:SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 40,),
+                  MainLogo(),
+                  SizedBox(height: 100,),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(60, 8, 60, 8),
+                    child: SizedBox(
+                      height: 80,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Enter the OTP that was sent to your mobile number",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            color: AppColors.but_black,
+                            letterSpacing: 0.48,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                ),
 
-                OTPField(),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  width:120,
-                  child: ElevatedButton(
-                      onPressed: verify,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(8),
-                        backgroundColor: AppColors.but_black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                  OTPField(),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    width:120,
+                    child: ElevatedButton(
+                        onPressed: _isButtonDisabled ? null : verify,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(8),
+                          backgroundColor: AppColors.but_black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          shadowColor: AppColors.but_shadow_black,
                         ),
-                        shadowColor: AppColors.but_shadow_black,
-                      ),
-                      child: const Text("VERIFY",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: 'Roboto',
-                          letterSpacing: 0.46,
-                          fontWeight: FontWeight.w600,
-                          fontStyle: FontStyle.normal,
-                        ),
-                      )),
-                ),
-              ],
-            ),
-          )
+                        child: const Text("VERIFY",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Roboto',
+                            letterSpacing: 0.46,
+                            fontWeight: FontWeight.w600,
+                            fontStyle: FontStyle.normal,
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            )
+        ),
       ),
     );
   }

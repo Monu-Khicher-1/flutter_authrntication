@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
       title: 'Flutter Demo',
       initialRoute: '/',
-      // home: LandingPage(),
       routes: {
         '/' : (context) => const LandingPage(),
         '/auth' : (context) => const Authentication(),
