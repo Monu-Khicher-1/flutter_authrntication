@@ -1,10 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:study_partner_teach/entities/user.dart';
-import 'package:study_partner_teach/pages/auth.dart';
-import 'package:study_partner_teach/pages/home.dart';
-import 'package:study_partner_teach/services/db/shared_prefs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:study_partner_teach/utils/Colors.dart';
+import 'package:study_partner_teach/utils/Constants.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -18,33 +18,19 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     super.initState();
+    getValidationData().whenComplete(() async {
+    Timer(Duration(seconds: 2),()=>Navigator.of(context).pushNamedAndRemoveUntil(Constants.PhoneNo==null ? '/auth' : '/home', (route) => false));
+    }
+    );
+
     // init();
-      final route =MaterialPageRoute(
-          builder: (context) => const Authentication()
-      );
-      Navigator.pushAndRemoveUntil(context,route , (route) => false);
 
   }
-  void init() async {
-    print("Init");
-    var prefs =SharedPrefs();
-    bool isLoggedIn= await prefs.isLoggedIn();
-    if(isLoggedIn){
-      print("User is logged In");
-      User user = prefs.user;
-      final route =MaterialPageRoute(
-          builder: (context) => const HomePage()
-      );
-      Navigator.pushAndRemoveUntil(context,route , (route) => false);
-    }
-    else{
-      print("Not logged in");
-      final route =MaterialPageRoute(
-          builder: (context) => const Authentication()
-      );
-      Navigator.pushAndRemoveUntil(context,route , (route) => false);
-    }
-  }
+ Future getValidationData() async{
+    final SharedPreferences shared_prefs = await SharedPreferences.getInstance();
+    Constants.PhoneNo = shared_prefs.getString('phone');
+    print("Shared Prefs say phone: ${Constants.PhoneNo}");
+ }
   @override
   Widget build(BuildContext context) {
     print("Hello..");

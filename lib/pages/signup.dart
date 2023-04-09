@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:study_partner_teach/entities/user.dart';
 import 'package:study_partner_teach/pages/otp.dart';
 import 'package:study_partner_teach/pages/validation.dart';
@@ -40,6 +41,8 @@ class _SignUpPageState extends State<SignUpPage> {
     bool isvalid =await authservice.signUp(newUser);
     if(isvalid){
       Utility.customSnackBar(context: context, message: "Data sent successfully.");
+      final SharedPreferences shared_prefs = await SharedPreferences.getInstance();
+      shared_prefs.setString('phone',_phoneNumber);
       final route =MaterialPageRoute(
           builder: (context) => OtpPage(_phoneNumber.toString())
       );

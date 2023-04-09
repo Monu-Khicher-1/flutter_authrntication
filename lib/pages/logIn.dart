@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:study_partner_teach/entities/user.dart';
 import 'package:study_partner_teach/pages/validation.dart';
 import 'package:study_partner_teach/services/api/auth_services.dart';
@@ -33,6 +34,8 @@ class _LogInPageState extends State<LogInPage> {
     bool isvalid =await authservice.logIn(newuser);
     if(isvalid){
       Utility.customSnackBar(context: context, message: "Successfully Logged In.");
+      final SharedPreferences shared_prefs = await SharedPreferences.getInstance();
+      shared_prefs.setString('phone',_phoneNumber);
       Navigator.pushNamedAndRemoveUntil(context, '/home',(route) => false);
     }
     else{
